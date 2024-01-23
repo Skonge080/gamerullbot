@@ -1,0 +1,73 @@
+import os
+import discord
+from discord.ext import commands, tasks
+import datetime
+from keep_alive import keep_alive
+
+keep_alive()
+
+TOKEN = os.environ['TOKEN']
+CHANNEL_ID = int(os.environ['CHANNEL_ID'])
+target_time1 = datetime.time(4, 0, 0)
+target_time2 = datetime.time(4, 0, 59)
+
+activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='%!?', intents=intents, activity=activity)
+
+
+async def upload_image():
+  try:
+    image_number = datetime.datetime.now().day
+    file_path = f"images/{image_number}.jpg"
+    channel = bot.get_channel(CHANNEL_ID)
+    if channel:
+      with open(file_path, 'rb') as file:
+        await channel.send(file=discord.File(file))
+    print('image sent')
+  except Exception as e:
+    print(f'ERROR: {e}')
+
+
+@tasks.loop(seconds=60)
+async def daily_image():
+  print("Checking the time")
+  current_time = datetime.datetime.now().time()
+  if current_time >= target_time1 and current_time <= target_time2:
+    print(f'Right time; datetime: {datetime.datetime.now()}')
+    await upload_image()
+  else:
+    print(f'Wrong time; datetime: {datetime.datetime.now()}')
+
+
+@bot.command()
+async def ping(ctx):
+  await ctx.send('pong')
+  print('pong sent')
+
+
+@bot.command()
+async def image(ctx):
+  await upload_image()
+
+
+@bot.command()
+async def stop(ctx):
+  daily_image.stop()
+  print('daily upload stopped')
+
+
+@bot.command()
+async def start(ctx):
+  daily_image.start()
+  print('daily upload started')
+
+
+@bot.event
+async def on_ready():
+  print(f'Logged in as {bot.user.name}')
+  daily_image.start()
+
+
+bot.run(TOKEN)
