@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands, tasks
 import datetime
+import asyncio
 from keep_alive import keep_alive
 
 keep_alive()
@@ -24,6 +25,7 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
 async def send_log(message):
     owner = bot.get_user(OWNER_ID)
     if owner:
+        await asyncio.sleep(1)
         await owner.send(message)
 
 
