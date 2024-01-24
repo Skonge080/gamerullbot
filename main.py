@@ -10,7 +10,7 @@ TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
-log = True
+log = False
 target_time1 = datetime.time(10, 0, 0)
 target_time2 = datetime.time(10, 0, 59)
 
