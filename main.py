@@ -31,7 +31,7 @@ async def upload_image():
   try:
     image_number = datetime.datetime.now().day
     file_path = f"images/{image_number}.jpg"
-    channel = bot.get_channel(CHANNEL_ID)
+    channel = await bot.fetch_user(CHANNEL_ID)
     if channel:
       with open(file_path, 'rb') as file:
         await channel.send(file=discord.File(file))
