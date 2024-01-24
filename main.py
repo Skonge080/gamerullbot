@@ -8,8 +8,8 @@ keep_alive()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
-target_time1 = datetime.time(9, 0, 0)
-target_time2 = datetime.time(9, 0, 59)
+target_time1 = datetime.time(10, 0, 0)
+target_time2 = datetime.time(10, 0, 59)
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
