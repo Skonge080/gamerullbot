@@ -8,13 +8,23 @@ keep_alive()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
+OWNER_ID = int(os.environ['OWNER_ID'])
+PREFIX = os.environ['PREFIX']
+log = True
 target_time1 = datetime.time(10, 0, 0)
 target_time2 = datetime.time(10, 0, 59)
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='%!?', intents=intents, activity=activity)
+bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
+
+
+
+async def send_log(message):
+    owner = bot.get_user(OWNER_ID)
+    if owner:
+        await owner.send(message)
 
 
 async def upload_image():
@@ -25,26 +35,39 @@ async def upload_image():
     if channel:
       with open(file_path, 'rb') as file:
         await channel.send(file=discord.File(file))
-    print('image sent')
+    if log:
+      await send_log('image sent')
+    else:
+      print('image sent')
   except Exception as e:
     print(f'ERROR: {e}')
+
 
 
 @tasks.loop(seconds=60)
 async def daily_image():
   print("Checking the time")
   current_time = datetime.datetime.now().time()
-  if current_time >= target_time1 and current_time <= target_time2:
-    print(f'Right time; datetime: {datetime.datetime.now()}')
+  if target_time1 <= current_time <= target_time2:
+    if log:
+      await send_log(f'Right time; datetime: {datetime.datetime.now()}; {PREFIX}')
+    else:
+      print(f'Right time; datetime: {datetime.datetime.now()}')
     await upload_image()
   else:
-    print(f'Wrong time; datetime: {datetime.datetime.now()}')
+    if log:
+      await send_log(f'Wrong time; datetime: {datetime.datetime.now()}; {PREFIX}')
+    else:
+      print(f'Wrong time; datetime: {datetime.datetime.now()}')
 
 
 @bot.command()
 async def ping(ctx):
   await ctx.send('pong')
-  print('pong sent')
+  if log:
+    await send_log('pong sent')
+  else:
+    print('pong sent')
 
 
 @bot.command()
@@ -55,18 +78,27 @@ async def image(ctx):
 @bot.command()
 async def stop(ctx):
   daily_image.stop()
-  print('daily upload stopped')
+  if log:
+    await send_log('daily upload stopped')
+  else:
+    print('daily upload stopped')
 
 
 @bot.command()
 async def start(ctx):
   daily_image.start()
-  print('daily upload started')
+  if log:
+    await send_log('daily upload started')
+  else:
+    print('daily upload started')
 
 
 @bot.event
 async def on_ready():
-  print(f'Logged in as {bot.user.name}')
+  if log:
+    await send_log(f'Logged in as {bot.user.name}')
+  else:
+    print(f'Logged in as {bot.user.name}')
   daily_image.start()
 
 
