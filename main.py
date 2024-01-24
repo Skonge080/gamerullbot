@@ -37,6 +37,7 @@ async def upload_image():
         await channel.send(file=discord.File(file))
     if log:
       await send_log('image sent')
+      print('image sent')
     else:
       print('image sent')
   except Exception as e:
@@ -46,17 +47,23 @@ async def upload_image():
 
 @tasks.loop(seconds=60)
 async def daily_image():
-  print("Checking the time")
+  if log:
+    await send_log('Checking the time')
+    print('Checking the time')
+  else:
+    print('Checking the time')
   current_time = datetime.datetime.now().time()
   if target_time1 <= current_time <= target_time2:
     if log:
       await send_log(f'Right time; datetime: {datetime.datetime.now()}; {PREFIX}')
+      print(f'Right time; datetime: {datetime.datetime.now()}')
     else:
       print(f'Right time; datetime: {datetime.datetime.now()}')
     await upload_image()
   else:
     if log:
       await send_log(f'Wrong time; datetime: {datetime.datetime.now()}; {PREFIX}')
+      print(f'Wrong time; datetime: {datetime.datetime.now()}')
     else:
       print(f'Wrong time; datetime: {datetime.datetime.now()}')
 
@@ -66,6 +73,7 @@ async def ping(ctx):
   await ctx.send('pong')
   if log:
     await send_log('pong sent')
+    print('pong sent')
   else:
     print('pong sent')
 
@@ -80,6 +88,7 @@ async def stop(ctx):
   daily_image.stop()
   if log:
     await send_log('daily upload stopped')
+    print('daily upload stopped')
   else:
     print('daily upload stopped')
 
@@ -89,6 +98,7 @@ async def start(ctx):
   daily_image.start()
   if log:
     await send_log('daily upload started')
+    print('daily upload started')
   else:
     print('daily upload started')
 
@@ -97,6 +107,7 @@ async def start(ctx):
 async def on_ready():
   if log:
     await send_log(f'Logged in as {bot.user.name}')
+    print(f'Logged in as {bot.user.name}')
   else:
     print(f'Logged in as {bot.user.name}')
   daily_image.start()
