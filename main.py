@@ -1,4 +1,4 @@
--0import os
+import os
 import discord
 from discord.ext import commands, tasks
 import datetime
