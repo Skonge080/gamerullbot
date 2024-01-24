@@ -11,29 +11,29 @@ TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
-log = False
-target_time1 = datetime.time(7, 0, 0)
-target_time2 = datetime.time(7, 0, 59)
+log = True
+target_time1 = datetime.time(13, 0, 0)
+target_time2 = datetime.time(13, 0, 59)
 
-activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
+activity = discord.Activity(type=discord.ActivityType.watching,
+                            name="новый Мем")
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
 
 
-
 async def send_log(message):
-    owner = bot.get_user(OWNER_ID)
-    if owner:
-        await asyncio.sleep(1)
-        await owner.send(message)
+  owner = await bot.fetch_user(OWNER_ID)
+  if owner:
+    await asyncio.sleep(1)
+    await owner.send(message)
 
 
 async def upload_image():
   try:
     image_number = datetime.datetime.now().day
     file_path = f"images/{image_number}.jpg"
-    channel = await bot.fetch_user(CHANNEL_ID)
+    channel = bot.get_channel(CHANNEL_ID)
     if channel:
       with open(file_path, 'rb') as file:
         await channel.send(file=discord.File(file))
@@ -46,7 +46,6 @@ async def upload_image():
     print(f'ERROR: {e}')
 
 
-
 @tasks.loop(seconds=60)
 async def daily_image():
   if log:
@@ -57,14 +56,16 @@ async def daily_image():
   current_time = datetime.datetime.now().time()
   if target_time1 <= current_time <= target_time2:
     if log:
-      await send_log(f'Right time; datetime: {datetime.datetime.now()}; {PREFIX}')
+      await send_log(
+          f'Right time; datetime: {datetime.datetime.now()}; {PREFIX}')
       print(f'Right time; datetime: {datetime.datetime.now()}')
     else:
       print(f'Right time; datetime: {datetime.datetime.now()}')
     await upload_image()
   else:
     if log:
-      await send_log(f'Wrong time; datetime: {datetime.datetime.now()}; {PREFIX}')
+      await send_log(
+          f'Wrong time; datetime: {datetime.datetime.now()}; {PREFIX}')
       print(f'Wrong time; datetime: {datetime.datetime.now()}')
     else:
       print(f'Wrong time; datetime: {datetime.datetime.now()}')
