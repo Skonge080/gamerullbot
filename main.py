@@ -1,4 +1,4 @@
-import os
+-0import os
 import discord
 from discord.ext import commands, tasks
 import datetime
@@ -12,8 +12,8 @@ CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
 log = False
-target_time1 = datetime.time(10, 0, 0)
-target_time2 = datetime.time(10, 0, 59)
+target_time1 = datetime.time(7, 0, 0)
+target_time2 = datetime.time(7, 0, 59)
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
