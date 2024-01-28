@@ -25,7 +25,6 @@ async def upload_image():
   try:
     image_number = datetime.datetime.now().day
     file_path = f"images/{image_number}.jpg"
-    channel = bot.get_channel(CHANNEL_ID)
     if channel:
       with open(file_path, 'rb') as file:
         await channel.send(file=discord.File(file))
@@ -43,11 +42,10 @@ async def upload_image():
 
 @tasks.loop(seconds=60)
 async def send_log():
-    if message_buffer:
-        owner = await bot.fetch_user(OWNER_ID)
-        if owner:
-            await owner.send("\n".join(message_buffer))
-            message_buffer.clear()
+  if message_buffer:
+    if owner:
+      await owner.send("\n".join(message_buffer))
+      message_buffer.clear()
 
 @tasks.loop(seconds=60)
 async def daily_image():
@@ -109,6 +107,9 @@ async def start(ctx):
 
 @bot.event
 async def on_ready():
+  global channel, owner
+  channel = bot.get_channel(CHANNEL_ID)
+  owner = await bot.fetch_user(OWNER_ID)
   if log:
     message_buffer.append(f'Logged in as {bot.user.name}')
     print(f'Logged in as {bot.user.name}')
