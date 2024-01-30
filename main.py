@@ -8,9 +8,9 @@ keep_alive()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
-OWNER_ID = int(os.environ['OWNER_ID'])
+#OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
-log = True
+log = False
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 4, 59)
 
@@ -116,7 +116,7 @@ async def on_ready():
   else:
     print(f'Logged in as {bot.user.name}')
   daily_image.start()
-  send_log.start()
+  #send_log.start()
 
 
 bot.run(TOKEN)
