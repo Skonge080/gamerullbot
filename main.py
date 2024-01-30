@@ -8,11 +8,11 @@ keep_alive()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
-#OWNER_ID = int(os.environ['OWNER_ID'])
+OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
 log = False
 target_time1 = datetime.time(4, 0, 0)
-target_time2 = datetime.time(4, 4, 59)
+target_time2 = datetime.time(4, 0, 59)
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
@@ -40,14 +40,14 @@ async def upload_image():
     else:
       print(f'ERROR: {e}')
 
-@tasks.loop(seconds=300)
+@tasks.loop(seconds=60)
 async def send_log():
   if message_buffer:
     if owner:
       await owner.send("\n".join(message_buffer))
       message_buffer.clear()
 
-@tasks.loop(seconds=300)
+@tasks.loop(seconds=60)
 async def daily_image():
   if log:
     message_buffer.append('Checking the time')
@@ -107,9 +107,9 @@ async def start(ctx):
 
 @bot.event
 async def on_ready():
-  global channel, owner
+  #global channel, owner
   channel = bot.get_channel(CHANNEL_ID)
-  owner = await bot.fetch_user(OWNER_ID)
+  #owner = await bot.fetch_user(OWNER_ID)
   if log:
     message_buffer.append(f'Logged in as {bot.user.name}')
     print(f'Logged in as {bot.user.name}')
