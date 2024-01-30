@@ -12,7 +12,7 @@ OWNER_ID = int(os.environ['OWNER_ID'])
 PREFIX = os.environ['PREFIX']
 log = True
 target_time1 = datetime.time(4, 0, 0)
-target_time2 = datetime.time(4, 0, 59)
+target_time2 = datetime.time(4, 4, 59)
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
@@ -40,14 +40,14 @@ async def upload_image():
     else:
       print(f'ERROR: {e}')
 
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=300)
 async def send_log():
   if message_buffer:
     if owner:
       await owner.send("\n".join(message_buffer))
       message_buffer.clear()
 
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=300)
 async def daily_image():
   if log:
     message_buffer.append('Checking the time')
