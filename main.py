@@ -2,9 +2,12 @@ import os
 import discord
 from discord.ext import commands, tasks
 import datetime
+import asyncio
+import random
 from keep_alive import keep_alive
 
 keep_alive()
+start_time = datetime.datetime.now()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
@@ -63,6 +66,25 @@ async def start(ctx):
   daily_image.start()
   print('daily upload started')
 
+
+@bot.command()
+async def pid(ctx):
+  await asyncio.sleep(random.uniform(0.1, 3.0))
+  await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now() - start_time}')
+  print('pid sent')
+
+
+@bot.command()
+async def close(ctx, *, pid: str):
+    try:
+        pid = int(pid)
+    except ValueError:
+        await ctx.send("Пожалуйста, введите число.")
+        return
+    if pid == os.getpid():
+      print(f'{pid} closed')
+      await ctx.send(f'{pid} closed')
+      await bot.close()
 
 @bot.event
 async def on_ready():
