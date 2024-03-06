@@ -4,14 +4,17 @@ from discord.ext import commands, tasks
 import datetime
 import asyncio
 import random
+import requests
 from keep_alive import keep_alive
 
 keep_alive()
+
 start_time = datetime.datetime.now()
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 PREFIX = os.environ['PREFIX']
+PING_URL = os.environ['PREFIX']
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 0, 59)
 
@@ -34,6 +37,17 @@ async def upload_image():
 
 
 @tasks.loop(seconds=60)
+async def keep_alive():
+    try:
+        response = requests.head(PING_URL)
+        if response.status_code == 200:
+            print("Успешный запрос к проекту")
+        else:
+            print(f"Ошибка при обращении к проекту. Код состояния: {response.status_code}")
+    except Exception as e:
+        print(f"Произошла ошибка при выполнении запроса: {str(e)}")
+
+@tasks.loop(seconds=60)
 async def daily_image():
   print('Checking the time')
   current_time = datetime.datetime.now().time()
@@ -49,30 +63,27 @@ async def ping(ctx):
   await ctx.send('pong')
   print('pong sent')
 
-
 @bot.command()
 async def image(ctx):
   await upload_image()
-
 
 @bot.command()
 async def stop(ctx):
   daily_image.stop()
   print('daily upload stopped')
-
+  await ctx.send('daily upload stopped')
 
 @bot.command()
 async def start(ctx):
   daily_image.start()
   print('daily upload started')
-
+  await ctx.send('daily upload started')
 
 @bot.command()
 async def pid(ctx):
   await asyncio.sleep(random.uniform(0.1, 3.0))
   await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now() - start_time}')
   print('pid sent')
-
 
 @bot.command()
 async def close(ctx, *, pid: str):
@@ -84,6 +95,7 @@ async def close(ctx, *, pid: str):
     if pid == os.getpid():
       print(f'{pid} closed')
       await ctx.send(f'{pid} closed')
+      await asyncio.sleep(1)
       await bot.close()
 
 @bot.event
@@ -92,6 +104,7 @@ async def on_ready():
   channel = bot.get_channel(CHANNEL_ID)
   print(f'Logged in as {bot.user.name}')
   daily_image.start()
+  keep_alive.start()
 
 
 bot.run(TOKEN)
