@@ -39,7 +39,7 @@ async def upload_image():
 @tasks.loop(seconds=60)
 async def keep_alive():
     try:
-        response = requests.head(PING_URL)
+        response = requests.get(PING_URL)
         if response.status_code == 200:
             print("Успешный запрос к проекту")
         else:
