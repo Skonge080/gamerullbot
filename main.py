@@ -14,7 +14,7 @@ start_time = datetime.datetime.now()
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 PREFIX = os.environ['PREFIX']
-PING_URL = os.environ['PREFIX']
+PING_URL = os.environ['PING_URL']
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 0, 59)
 
