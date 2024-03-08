@@ -50,12 +50,12 @@ async def keep_alive():
 @tasks.loop(seconds=60)
 async def daily_image():
   print('Checking the time')
-  current_time = datetime.datetime.now().time()
+  current_time = datetime.datetime.now().time().replace(microsecond=0)
   if target_time1 <= current_time <= target_time2:
-    print(f'Right time; datetime: {datetime.datetime.now()}')
+    print(f'Right time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
     await upload_image()
   else:
-    print(f'Wrong time; datetime: {datetime.datetime.now()}')
+    print(f'Wrong time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
 
 
 @bot.command()
