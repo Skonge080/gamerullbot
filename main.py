@@ -9,7 +9,7 @@ from keep_alive import keep_alive
 
 keep_alive()
 
-start_time = datetime.datetime.now()
+start_time = datetime.datetime.now().replace(microsecond=0)
 
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
@@ -30,6 +30,7 @@ async def upload_image():
     file_path = f"images/{image_number}.jpg"
     if channel:
       with open(file_path, 'rb') as file:
+        await asyncio.sleep(random.uniform(0.1, 3.0))
         await channel.send(file=discord.File(file))
         print('image sent')
   except Exception as e:
@@ -82,7 +83,7 @@ async def start(ctx):
 @bot.command()
 async def pid(ctx):
   await asyncio.sleep(random.uniform(0.1, 3.0))
-  await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now() - start_time}')
+  await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now().replace(microsecond=0) - start_time}')
   print('pid sent')
 
 @bot.command()
@@ -90,6 +91,7 @@ async def close(ctx, *, pid: str):
     try:
         pid = int(pid)
     except ValueError:
+        await asyncio.sleep(random.uniform(0.1, 3.0))
         await ctx.send("Пожалуйста, введите число.")
         return
     if pid == os.getpid():
