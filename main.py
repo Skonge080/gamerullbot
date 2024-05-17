@@ -4,17 +4,18 @@ from discord.ext import commands, tasks
 import datetime
 import asyncio
 import random
-import requests
-from keep_alive import keep_alive
+# import requests
+from keep_alive import keep_alive, send_get_request
 
 keep_alive()
+send_get_request()
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 
-TOKEN = os.environ['TOKEN']
-CHANNEL_ID = int(os.environ['CHANNEL_ID'])
-PREFIX = os.environ['PREFIX']
-PING_URL = os.environ['PING_URL']
+TOKEN = 'MTE5OTY3NjM4MzE5NTA0MTg4Mg.G9H42_.yrLK4xRjeBjTkq4FgbH64rmlgBslSjlfbiRFcQ' #os.environ['TOKEN']
+CHANNEL_ID = 1199677841231577119 #int(os.environ['CHANNEL_ID'])
+PREFIX = '%!?' #os.environ['PREFIX']
+# PING_URL = 'http://127.0.0.1:8080/' #os.environ['PING_URL']
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 0, 59)
 
@@ -37,16 +38,16 @@ async def upload_image():
     print(f'ERROR: {e}')
 
 
-@tasks.loop(seconds=60)
-async def keep_alive():
-    try:
-        response = requests.get(PING_URL)
-        if response.status_code == 200:
-            print("Успешный запрос к проекту")
-        else:
-            print(f"Ошибка при обращении к проекту. Код состояния: {response.status_code}")
-    except Exception as e:
-        print(f"Произошла ошибка при выполнении запроса: {str(e)}")
+# @tasks.loop(seconds=60)
+# async def keep_alive():
+#     try:
+    #     response = requests.get(PING_URL)
+    #     if response.status_code == 200:
+    #         print("Успешный запрос к проекту")
+    #     else:
+    #         print(f"Ошибка при обращении к проекту. Код состояния: {response.status_code}")
+    # except Exception as e:
+    #     print(f"Произошла ошибка при выполнении запроса: {str(e)}")
 
 @tasks.loop(seconds=60)
 async def daily_image():
@@ -106,7 +107,7 @@ async def on_ready():
   channel = bot.get_channel(CHANNEL_ID)
   print(f'Logged in as {bot.user.name}')
   daily_image.start()
-  keep_alive.start()
+  # keep_alive.start()
 
 
 bot.run(TOKEN)
