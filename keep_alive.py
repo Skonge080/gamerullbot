@@ -20,7 +20,7 @@ def send_get_request():
     def send():
         while True:
             try:
-                response = requests.head('http://127.0.0.1:8080/')
+                response = requests.get('http://127.0.0.1:8080/')
                 if response.status_code == 200:
                     print("Успешный запрос к проекту")
                 else:
