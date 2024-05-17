@@ -7,7 +7,7 @@ import random
 from keep_alive import keep_alive, send_get_request
 
 keep_alive()
-send_get_request()
+send_request()
 
 
 start_time = datetime.datetime.now().replace(microsecond=0)
