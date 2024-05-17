@@ -4,20 +4,20 @@ from discord.ext import commands, tasks
 import datetime
 import asyncio
 import random
-# import requests
 from keep_alive import keep_alive, send_get_request
 
 keep_alive()
 send_get_request()
+
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 
 TOKEN = 'MTE5OTY3NjM4MzE5NTA0MTg4Mg.G9H42_.yrLK4xRjeBjTkq4FgbH64rmlgBslSjlfbiRFcQ' #os.environ['TOKEN']
 CHANNEL_ID = 1199677841231577119 #int(os.environ['CHANNEL_ID'])
 PREFIX = '%!?' #os.environ['PREFIX']
-# PING_URL = 'http://127.0.0.1:8080/' #os.environ['PING_URL']
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 0, 59)
+
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
 intents = discord.Intents.default()
@@ -26,66 +26,55 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
 
 
 async def upload_image():
-  try:
-    image_number = datetime.datetime.now().day
-    file_path = f"images/{image_number}.jpg"
-    if channel:
-      with open(file_path, 'rb') as file:
-        await asyncio.sleep(random.uniform(0.1, 3.0))
-        await channel.send(file=discord.File(file))
-        print('image sent')
-  except Exception as e:
-    print(f'ERROR: {e}')
+    try:
+        image_number = datetime.datetime.now().day
+        file_path = f"images/{image_number}.jpg"
+        if channel:
+            with open(file_path, 'rb') as file:
+                await asyncio.sleep(random.uniform(0.1, 3.0))
+                await channel.send(file=discord.File(file))
+                print('image sent')
+    except Exception as e:
+        print(f'ERROR: {e}')
 
-
-# @tasks.loop(seconds=60)
-# async def keep_alive():
-#     try:
-    #     response = requests.get(PING_URL)
-    #     if response.status_code == 200:
-    #         print("Успешный запрос к проекту")
-    #     else:
-    #         print(f"Ошибка при обращении к проекту. Код состояния: {response.status_code}")
-    # except Exception as e:
-    #     print(f"Произошла ошибка при выполнении запроса: {str(e)}")
 
 @tasks.loop(seconds=60)
 async def daily_image():
-  print('Checking the time')
-  current_time = datetime.datetime.now().time().replace(microsecond=0)
-  if target_time1 <= current_time <= target_time2:
-    print(f'Right time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
-    await upload_image()
-  else:
-    print(f'Wrong time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
+    print('Checking the time')
+    current_time = datetime.datetime.now().time().replace(microsecond=0)
+    if target_time1 <= current_time <= target_time2:
+        print(f'Right time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
+        await upload_image()
+    else:
+        print(f'Wrong time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
 
 
 @bot.command()
 async def ping(ctx):
-  await ctx.send('pong')
-  print('pong sent')
+    await ctx.send('pong')
+    print('pong sent')
 
 @bot.command()
 async def image(ctx):
-  await upload_image()
+    await upload_image()
 
 @bot.command()
 async def stop(ctx):
-  daily_image.stop()
-  print('daily upload stopped')
-  await ctx.send('daily upload stopped')
+    daily_image.stop()
+    print('daily upload stopped')
+    await ctx.send('daily upload stopped')
 
 @bot.command()
 async def start(ctx):
-  daily_image.start()
-  print('daily upload started')
-  await ctx.send('daily upload started')
+    daily_image.start()
+    print('daily upload started')
+    await ctx.send('daily upload started')
 
 @bot.command()
 async def pid(ctx):
-  await asyncio.sleep(random.uniform(0.1, 3.0))
-  await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now().replace(microsecond=0) - start_time}')
-  print('pid sent')
+    await asyncio.sleep(random.uniform(0.1, 3.0))
+    await ctx.send(f'pid: {os.getpid()}, working time: {datetime.datetime.now().replace(microsecond=0) - start_time}')
+    print('pid sent')
 
 @bot.command()
 async def close(ctx, *, pid: str):
@@ -96,18 +85,18 @@ async def close(ctx, *, pid: str):
         await ctx.send("Пожалуйста, введите число.")
         return
     if pid == os.getpid():
-      print(f'{pid} closed')
-      await ctx.send(f'{pid} closed')
-      await asyncio.sleep(1)
-      await bot.close()
+        print(f'{pid} closed')
+        await ctx.send(f'{pid} closed')
+        await asyncio.sleep(1)
+        await bot.close()
+
 
 @bot.event
 async def on_ready():
-  global channel
-  channel = bot.get_channel(CHANNEL_ID)
-  print(f'Logged in as {bot.user.name}')
-  daily_image.start()
-  # keep_alive.start()
+    global channel
+    channel = bot.get_channel(CHANNEL_ID)
+    print(f'Logged in as {bot.user.name}')
+    daily_image.start()
 
 
 bot.run(TOKEN)
