@@ -4,7 +4,7 @@ from discord.ext import commands, tasks
 import datetime
 import asyncio
 import random
-from keep_alive import keep_alive, send_get_request
+from keep_alive import keep_alive, send_request
 
 keep_alive()
 send_request()
