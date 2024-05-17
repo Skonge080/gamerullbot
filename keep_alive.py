@@ -16,7 +16,7 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-def send_get_request():
+def send_request():
     def send():
         while True:
             try:
