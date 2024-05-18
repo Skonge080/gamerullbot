@@ -3,6 +3,10 @@ from flask import Flask
 from threading import Thread
 import time
 
+
+PING_URL = os.environ['PING_URL']
+
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -15,6 +19,7 @@ def keep_alive():
 
     t = Thread(target=run)
     t.start()
+
 
 def send_request():
     def send():
