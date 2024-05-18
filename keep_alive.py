@@ -25,7 +25,7 @@ def send_request():
     def send():
         while True:
             try:
-                response = requests.get('http://127.0.0.1:8080/')
+                response = requests.head(PING_URL)
                 if response.status_code == 200:
                     print("Успешный запрос к проекту")
                 else:
