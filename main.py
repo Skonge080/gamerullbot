@@ -1,4 +1,4 @@
-import os
+from os import getpid, environ
 import discord
 from discord.ext import commands, tasks
 import datetime
