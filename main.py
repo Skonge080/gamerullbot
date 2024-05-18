@@ -12,9 +12,9 @@ send_request()
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 
-TOKEN = 'MTE5OTY3NjM4MzE5NTA0MTg4Mg.G9H42_.yrLK4xRjeBjTkq4FgbH64rmlgBslSjlfbiRFcQ' #os.environ['TOKEN']
-CHANNEL_ID = 1199677841231577119 #int(os.environ['CHANNEL_ID'])
-PREFIX = '%!?' #os.environ['PREFIX']
+TOKEN = os.environ['TOKEN']
+CHANNEL_ID = int(os.environ['CHANNEL_ID'])
+PREFIX = os.environ['PREFIX']
 target_time1 = datetime.time(4, 0, 0)
 target_time2 = datetime.time(4, 0, 59)
 
