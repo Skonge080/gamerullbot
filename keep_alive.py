@@ -2,6 +2,7 @@ import requests
 from flask import Flask
 from threading import Thread
 import time
+from os import environ
 
 
 PING_URL = os.environ['PING_URL']
