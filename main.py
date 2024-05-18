@@ -15,8 +15,8 @@ start_time = datetime.datetime.now().replace(microsecond=0)
 TOKEN = os.environ['TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
 PREFIX = os.environ['PREFIX']
-target_time1 = datetime.time(4, 0, 0)
-target_time2 = datetime.time(4, 0, 59)
+target_time1 = datetime.time(3, 0, 0)
+target_time2 = datetime.time(3, 0, 59)
 
 
 activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
