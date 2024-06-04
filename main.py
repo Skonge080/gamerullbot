@@ -25,26 +25,32 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
 
 
-async def upload_image():
+async def upload_meme():
     try:
-        image_number = datetime.datetime.now().day
-        file_path = f"images/{image_number}.jpg"
-        if channel:
+        current_date = datetime.datetime.now()
+        directory = f'memes/{current_date.year}/{current_date.month}'
+        for file in os.listdir(directory):
+            if file.startswith(str(current_date.day) + '.'):
+                file_path = os.path.join(directory, file)
+                break
+        if file_path and channel:
             with open(file_path, 'rb') as file:
                 await asyncio.sleep(random.uniform(0.1, 3.0))
                 await channel.send(file=discord.File(file))
-                print('image sent')
+                print('meme sent')
+        else:
+            print('No file found with the specified number.')
     except Exception as e:
         print(f'ERROR: {e}')
 
 
 @tasks.loop(seconds=60)
-async def daily_image():
+async def daily_meme():
     print('Checking the time')
     current_time = datetime.datetime.now().time().replace(microsecond=0)
     if target_time1 <= current_time <= target_time2:
         print(f'Right time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
-        await upload_image()
+        await upload_meme()
     else:
         print(f'Wrong time; datetime: {datetime.datetime.now().replace(microsecond=0)}')
 
@@ -55,18 +61,18 @@ async def ping(ctx):
     print('pong sent')
 
 @bot.command()
-async def image(ctx):
-    await upload_image()
+async def meme(ctx):
+    await upload_meme()
 
 @bot.command()
 async def stop(ctx):
-    daily_image.stop()
+    daily_meme.stop()
     print('daily upload stopped')
     await ctx.send('daily upload stopped')
 
 @bot.command()
 async def start(ctx):
-    daily_image.start()
+    daily_meme.start()
     print('daily upload started')
     await ctx.send('daily upload started')
 
@@ -96,7 +102,7 @@ async def on_ready():
     global channel
     channel = bot.get_channel(CHANNEL_ID)
     print(f'Logged in as {bot.user.name}')
-    daily_image.start()
+    daily_meme.start()
 
 
 bot.run(TOKEN)
