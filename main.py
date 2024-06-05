@@ -19,7 +19,7 @@ target_time1 = datetime.time(3, 0, 0)
 target_time2 = datetime.time(3, 0, 59)
 
 
-activity = discord.Activity(type=discord.ActivityType.watching, name="новый Мем")
+activity = discord.Activity(type=discord.ActivityType.watching, name="Мемы")
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents, activity=activity)
