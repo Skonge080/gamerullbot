@@ -71,6 +71,12 @@ async def meme(ctx):
     await upload_meme()
 
 @bot.command()
+async def stop(ctx):
+    daily_meme.stop()
+    logging.warning('Daily upload stopped')
+    await ctx.send('Daily upload stopped')
+
+@bot.command()
 async def start(ctx):
     if daily_meme.is_running():
         logging.warning('Daily upload is already running')
